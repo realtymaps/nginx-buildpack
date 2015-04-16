@@ -72,7 +72,7 @@ You can provide your own NGINX config by creating a file named `nginx.conf.erb` 
 
 See [scripts/build_nginx.sh](scripts/build_nginx.sh) for the build steps. Configuring is as easy as changing the "./configure" options.
 
-In order to update the binary you should fork this repository, clone this repo into a new (STANDART STACK) heroku application while making your build changes, then download the binary from the incorporated web server and update the corresponding files in the build folder
+In order to update the binary you should fork this repository, clone this repo into a new (STANDARD STACK) heroku application while making your build changes, then download the binary from the incorporated web server and update the corresponding files in the build folder
 
 ### Application/Dyno coordination
 
