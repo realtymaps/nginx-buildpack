@@ -5,6 +5,7 @@ main() {
     declare -A pids signals
 
     # Evaluate config to get environment variables
+    mkdir -p config
     erb config/nginx.conf.erb > config/nginx.conf
 
     # Use named pipe to detect exit of any subprocess.
