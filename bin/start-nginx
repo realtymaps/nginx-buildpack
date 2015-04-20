@@ -6,10 +6,7 @@ main() {
 
     # Evaluate config to get environment variables
     mkdir -p config
-    erb config/nginx.conf.erb > config/nginx.conf
-    at "app-debugging @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-    cat config/nginx.conf
-    at "app-debugging @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    erb ./nginx.conf.erb > config/nginx.conf
 
     # Use named pipe to detect exit of any subprocess.
     rm -f "$psmgr"
