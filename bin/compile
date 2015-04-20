@@ -31,7 +31,6 @@ main() {
     install $CACHE_DIR/sbin/nginx bin/nginx
     install $BUILDPACK_DIR/bin/start-nginx bin/start-nginx
     cond-install $BUILDPACK_DIR/config/mime.types config/mime.types
-    cond-install $BUILDPACK_DIR/config/nginx.conf.erb nginx.conf.erb
 }
 
 load-env() {
