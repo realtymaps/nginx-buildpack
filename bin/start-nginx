@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
 
+set -e
+
+
 main() {
     declare psmgr=/tmp/nginx-buildpack-wait
-    declare -A pids signals
+    declare -a pids signals
 
     # Evaluate config to get environment variables
     mkdir -p config
+    if [[ "$OSTYPE" == "linux"* ]]; then
+        export NGINX_CONNECTION_METHOD=epoll
+    elif [[ "$OSTYPE" == "darwin"* || "$OSTYPE" == "freebsd"* ]]; then
+        export NGINX_CONNECTION_METHOD=kqueue
+    fi
     coffee ./nginx.conf.coffee > config/nginx.conf
 
     # Use named pipe to detect exit of any subprocess.
@@ -76,17 +84,19 @@ app-start() {
         # the app needs to be able to receive when the dyno broadcasts
         # SIGTERM on shutdown.
         "$@" &
+        touch /tmp/nginx-app-start
 
         # Translate SIGHUP/SIGTERM to the appropriate signal to stop the child
         # (probably SIGTERM in this case). Since this doesn't exit, it won't
         # cancel the wait.
-        trap "kill -$signal $!" SIGHUP SIGTERM
+        trap "kill -$signal $!" SIGHUP SIGTERM SIGINT
 
         # Wait for the app to finish, either by crash or by $signal
         wait
 
         # Notify FIFO if this finishes first
         echo "$name" > "$psmgr"
+        touch /tmp/nginx-app-end
 
         at "$name-end"
     ) &
