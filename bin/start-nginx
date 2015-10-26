@@ -2,15 +2,7 @@
 
 
 main() {
-    # work within a nginx/ dir
-    mkdir -p nginx
-    cd nginx
-
-    declare psmgr=./nginx-buildpack-wait
-    declare -a pids signals
-
     # Evaluate config to get environment variables
-    mkdir -p config
     if [[ "$OSTYPE" == "linux"* ]]; then
         export NGINX_CONNECTION_METHOD=epoll
     elif [[ "$OSTYPE" == "darwin"* || "$OSTYPE" == "freebsd"* ]]; then
@@ -22,7 +14,15 @@ main() {
     else
         NGINX_CONF_FILE=${NGINX_CONF_FILE:-./nginx.conf.coffee}
     fi
-    coffee $NGINX_CONF_FILE > config/nginx.conf
+    
+    # work within a nginx/ dir
+    mkdir -p nginx/config
+    coffee $NGINX_CONF_FILE > nginx/config/nginx.conf
+    cd nginx
+
+    
+    declare psmgr=./nginx-buildpack-wait
+    declare -a pids signals
 
     # Use named pipe to detect exit of any subprocess.
     rm -f "$psmgr"
