@@ -2,12 +2,12 @@
 
 
 main() {
-    declare psmgr=./nginx-buildpack-wait
-    declare -a pids signals
-    
     # work within a nginx/ dir
     mkdir -p nginx
     cd nginx
+
+    declare psmgr=./nginx-buildpack-wait
+    declare -a pids signals
 
     # Evaluate config to get environment variables
     mkdir -p config
