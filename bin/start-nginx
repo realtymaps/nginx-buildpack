@@ -2,8 +2,12 @@
 
 
 main() {
-    declare psmgr=/tmp/nginx-buildpack-wait
+    declare psmgr=./nginx-buildpack-wait
     declare -a pids signals
+    
+    # work within a nginx/ dir
+    mkdir -p nginx
+    cd nginx
 
     # Evaluate config to get environment variables
     mkdir -p config
@@ -12,7 +16,13 @@ main() {
     elif [[ "$OSTYPE" == "darwin"* || "$OSTYPE" == "freebsd"* ]]; then
         export NGINX_CONNECTION_METHOD=kqueue
     fi
-    coffee ./nginx.conf.coffee > config/nginx.conf
+    if [[ "$1" == "--conf" ]]; then
+        NGINX_CONF_FILE=$2
+        shift 2
+    else
+        NGINX_CONF_FILE=${NGINX_CONF_FILE:-./nginx.conf.coffee}
+    fi
+    coffee $NGINX_CONF_FILE > config/nginx.conf
 
     # Use named pipe to detect exit of any subprocess.
     rm -f "$psmgr"
@@ -24,7 +34,7 @@ main() {
 
     # Wait for app to start.
     at app-waiting
-    while [[ ! -e "/tmp/app-initialized" ]]; do
+    while [[ ! -e "./app-initialized" ]]; do
         sleep 1
     done
     at app-initialized
@@ -83,7 +93,7 @@ app-start() {
         # SIGTERM on shutdown.
         "$@" &
         APP_PID="$!"
-        touch /tmp/nginx-app-start
+        touch ./nginx-app-start
 
         # Translate SIGHUP/SIGTERM to the appropriate signal to stop the child
         # (probably SIGTERM in this case). Since this doesn't exit, it won't
@@ -95,7 +105,7 @@ app-start() {
 
         # Notify FIFO if this finishes first
         echo "$name" > "$psmgr"
-        touch /tmp/nginx-app-end
+        touch ./nginx-app-end
 
         at "$name-end"
     ) &
