@@ -15,7 +15,7 @@ main() {
     NGINX_VERSION=${NGINX_VERSION-1.10.2}
     NGINX_PCRE_VERSION=${NGINX_PCRE_VERSION-8.39}
     NGINX_HEADERS_MORE_VERSION=${NGINX_HEADERS_MORE_VERSION-0.261}
-    OPENSSL_LOCATION=${OPENSSL_LOCATION-/usr/bin/openssl}
+    OPENSSL_VERSION=${OPENSSL_VERSION-1.0.2j}
     
     declare cached_version
     if [[ "$NGINX_FORCE_BUILD" != "true" ]]; then
@@ -52,6 +52,7 @@ build-nginx() {
     declare pcre_url=http://downloads.sourceforge.net/project/pcre/pcre/$NGINX_PCRE_VERSION/pcre-$NGINX_PCRE_VERSION.tar.bz2
     declare headers_more_url=https://github.com/agentzh/headers-more-nginx-module/archive/v$NGINX_HEADERS_MORE_VERSION.tar.gz
     declare delay_url=git://github.com/perusio/nginx-delay-module.git
+    declare openssl_url=https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz
 
     (
         set-indent
@@ -67,10 +68,8 @@ build-nginx() {
         git clone $delay_url
         
         if [[ "$NGINX_SSL_TERMINATION" == "on" ]]; then
-            SSL_OPTIONS="--with-openssl=$OPENSSL_LOCATION --with-http_ssl_module"
-            echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-            echo "$SSL_OPTIONS"
-            echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            curl -#L $openssl_url | tar xz
+            SSL_OPTIONS="--with-openssl=$PWD/openssl-$OPENSSL_VERSION --with-http_ssl_module"
         else
             SSL_OPTIONS=""
         fi
