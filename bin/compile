@@ -67,7 +67,7 @@ build-nginx() {
         git clone $delay_url
         
         if [[ "$NGINX_SSL_TERMINATION" == "on" ]]; then
-            SSL_OPTIONS="--with-openssl=/usr/bin/openssl --with-http_ssl_module"
+            SSL_OPTIONS="--with-http_ssl_module"
             echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             echo "$SSL_OPTIONS"
             echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
