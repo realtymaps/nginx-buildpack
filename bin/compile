@@ -68,6 +68,7 @@ build-nginx() {
         
         if [[ "$NGINX_SSL_TERMINATION" == "on" ]]; then
             SSL_OPTIONS="--with-openssl=/usr/bin/openssl --with-http_ssl_module"
+        fi
 
         CFLAGS="-O3 -pipe" ./configure \
             --prefix=$nginx_install_dir \
