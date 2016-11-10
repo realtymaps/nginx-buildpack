@@ -15,7 +15,7 @@ main() {
     NGINX_VERSION=${NGINX_VERSION-1.10.2}
     NGINX_PCRE_VERSION=${NGINX_PCRE_VERSION-8.39}
     NGINX_HEADERS_MORE_VERSION=${NGINX_HEADERS_MORE_VERSION-0.261}
-    
+    OPENSSL_LOCATION=${OPENSSL_LOCATION-/usr/bin/openssl}
     
     declare cached_version
     if [[ "$NGINX_FORCE_BUILD" != "true" ]]; then
@@ -67,7 +67,7 @@ build-nginx() {
         git clone $delay_url
         
         if [[ "$NGINX_SSL_TERMINATION" == "on" ]]; then
-            SSL_OPTIONS="--with-http_ssl_module --with-openssl=/usr/bin/openssl"
+            SSL_OPTIONS="--with-openssl=$OPENSSL_LOCATION --with-http_ssl_module"
             echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             echo "$SSL_OPTIONS"
             echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
