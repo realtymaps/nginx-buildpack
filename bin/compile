@@ -69,7 +69,8 @@ build-nginx() {
         
         if [[ "$NGINX_SSL_TERMINATION" == "on" ]]; then
             curl -#L $openssl_url | tar xz
-            SSL_OPTIONS="--with-openssl=$PWD/openssl-$OPENSSL_VERSION --with-http_ssl_module"
+            #SSL_OPTIONS="--with-openssl=$PWD/openssl-$OPENSSL_VERSION --with-http_ssl_module"
+            SSL_OPTIONS="--with-http_ssl_module"
         else
             SSL_OPTIONS=""
         fi
